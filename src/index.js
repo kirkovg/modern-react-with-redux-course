@@ -1,20 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import faker from "faker";
+import CommentDetail from './CommentDetail';
+import ApprovalCard from './ApprovalCard';
 
 const App = () => {
-  const buttonText = {
-    text: 'tocak'
-  };
-  const labelName = 'Enter name:';
-
   return (
-    <div>
-      <label className="label" htmlFor="name">{labelName}</label>
-      <input id="name" type="text"/>
-      <button style={{backgroundColor: 'red', color: 'white'}}>
-        {Object.values(buttonText)}
-      </button>
+    <div className="ui container comments">
+      <ApprovalCard>
+        <div>
+          <h4>Warning!</h4>
+          Are you sure you want to do this?
+        </div>
+      </ApprovalCard>
+      <ApprovalCard>
+        <CommentDetail
+          author="Sam"
+          createdAt="Today at 15:45PM"
+          commentText="Tocak"
+          avatarSrc={faker.image.avatar()}
+        />
+      </ApprovalCard>
+      <ApprovalCard>
+        <CommentDetail
+          author="Alex"
+          createdAt="Today at 2:00AM"
+          commentText="Nice video"
+          avatarSrc={faker.image.avatar()}/>
+      </ApprovalCard>
+      <ApprovalCard>
+        <CommentDetail
+          author="Jane"
+          createdAt="Yesterday at 5:00PM"
+          commentText="Too cool for school"
+          avatarSrc={faker.image.avatar()}/>
+      </ApprovalCard>
     </div>
   );
 };
