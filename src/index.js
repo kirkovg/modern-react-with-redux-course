@@ -1,18 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  state = { lat: null, errorMessage: '' };
 
-    this.state = { lat: null, lng: null, errorMessage: '' };
-
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
-      ({coords}) => this.setState({lat: coords.latitude, lng: coords.longitude}),
+      ({coords}) => this.setState({lat: coords.latitude}),
       (error) => this.setState({errorMessage: error.message}));
   }
 
-  render() {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('componentDidUpdate', prevState, prevProps, snapshot);
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+  }
+
+  renderContent() {
     if (this.state.errorMessage && !this.state.lat) {
       return (
         <div>
@@ -22,12 +30,19 @@ class App extends React.Component {
     }
     if (!this.state.errorMessage && this.state.lat) {
       return (
-        <div>
-          Latitude: {this.state.lat}, Latitude: {this.state.lng} <br/>
-        </div>
+        <SeasonDisplay lat={this.state.lat}/>
       );
     }
-    return <div>Loading...</div>;
+    return <Spinner message='Please accept location request'/>;
+  }
+
+  // NOTE: border-red is not actually defined
+  render() {
+    return (
+      <div className='border-red'>
+        {this.renderContent()}
+      </div>
+    );
   }
 }
 
