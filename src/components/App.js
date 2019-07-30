@@ -1,28 +1,51 @@
 import React from 'react';
-import unsplash from '../api/unsplash';
 import SearchBar from './SearchBar';
-import ImageList from './ImageList';
-
+import VideoList from './VideoList';
+import youtube from '../api/youtube';
+import VideoDetail from './VideoDetail';
 
 class App extends React.Component {
 
-  state = {images: []};
+  state = {
+    videos: [],
+    selectedVideo: null
+  };
 
-  onSearchSubmit = async (term) => {
-    const response = await unsplash.get('search/photos', {
+  componentDidMount() {
+    this.onTermSubmit('buildings');
+  }
+
+  onTermSubmit = async (term) => {
+    const response = await youtube.get('/search', {
       params: {
-        query: term
+        q: term
       }
     });
 
-    this.setState({images: response.data.results});
+    this.setState({
+      videos: response.data.items,
+      selectedVideo: response.data.items[0]
+    });
+  };
+
+  onVideoSelect = (video) => {
+    this.setState({selectedVideo: video});
   };
 
   render() {
     return (
-      <div className="ui container" style={{marginTop: '10px'}}>
-        <SearchBar onSubmit={this.onSearchSubmit}/>
-        <ImageList images={this.state.images}/>
+      <div className="ui container">
+        <SearchBar onSubmit={this.onTermSubmit}/>
+        <div className="ui grid">
+          <div className="ui row">
+            <div className="eleven wide column">
+              <VideoDetail video={this.state.selectedVideo}/>
+            </div>
+            <div className="five wide column">
+              <VideoList videos={this.state.videos} onVideoSelect={this.onVideoSelect}/>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
